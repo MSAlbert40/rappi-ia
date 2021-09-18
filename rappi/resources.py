@@ -4,10 +4,12 @@ import pygame as py
 # Colors of Game
 class Colors:
     def __init__(self):
-        self.dark = 27, 27, 27
+        self.dark = 48, 51, 49
         self.grass = 151, 218, 123
+        self.cposition = 0, 0, 255
         self.skyblue = 7, 218, 230
         self.blood = 174, 0, 2
+        self.delivery = 69, 242, 39
         self.transparent = 0, 0, 0, 50
 
 
@@ -62,3 +64,26 @@ class Buildings:
 
         self.red = py.image.load('assets/images/traffic-red.png')
         self.red = py.transform.scale(self.red, (w, h))
+
+
+class SpriteSheet(object):
+    def __init__(self):
+        self.sheet = py.image.load('assets/images/player.png')
+
+    def image_at(self, rectangle, ckey=None):
+        rect = py.Rect(rectangle)
+        img = py.Surface(rect.size)
+        img.blit(self.sheet, (0, 0), rect)
+        if ckey is not None:
+            if ckey == -1:
+                ckey = img.get_at((0, 0))
+            img.set_colorkey(ckey, py.RLEACCEL)
+        return img
+
+    def images_at(self, rects, ckey=None):
+        return [self.image_at(rect, ckey) for rect in rects]
+
+    def load_strip(self, rect, image_count, ckey=None):
+        ima = [(rect[0] + rect[2] * x, rect[1], rect[2], rect[3])
+               for x in range(image_count)]
+        return self.images_at(ima, ckey)
