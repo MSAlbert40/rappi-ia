@@ -1,6 +1,4 @@
 import sys
-import pygame as py
-from os import path
 from pygame.locals import *
 from rappi.map import *
 from rappi.delivery import *

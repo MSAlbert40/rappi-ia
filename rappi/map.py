@@ -50,13 +50,6 @@ class GameMap(Buildings, Colors):
                     self.map[rx][ry] = (10, rect)
                     count = count + 1
 
-        # Start Position
-        # rx = rd.randint(0, self.width - 1)
-        # ry = rd.randint(0, self.height - 1)
-        # value, rect = demo[rx][ry]
-        # if value == 0:
-            # self.map[rx][ry] = (-1, rect)
-
     def getRects(self):
         total = self.dashboard ** 2
         nColumns = self.dashboard
@@ -107,4 +100,4 @@ class GameMap(Buildings, Colors):
                     # py.draw.rect(surface, self.blood, rect)
                     surface.blit(self.red, (c * self.dimensions, r * self.dimensions))
                 elif value == 11:
-                    py.draw.rect(surface, self.skyblue, rect)
+                    surface.blit(self.goal, (c * self.dimensions, r * self.dimensions))

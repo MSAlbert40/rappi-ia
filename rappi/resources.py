@@ -5,7 +5,6 @@ import pygame as py
 class Colors:
     def __init__(self):
         self.dark = 40, 40, 40
-        self.cposition = 0, 0, 255
         self.skyblue = 7, 218, 230
         self.delivery = 69, 242, 39
         self.transparent = 0, 0, 0, 50
@@ -62,6 +61,9 @@ class Buildings:
 
         self.red = py.image.load('assets/images/traffic-red.png')
         self.red = py.transform.scale(self.red, (w, h))
+
+        self.goal = py.image.load('assets/images/goal.png')
+        self.goal = py.transform.scale(self.goal, (w, h))
 
 
 class SpriteSheet(object):
