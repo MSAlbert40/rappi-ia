@@ -9,7 +9,7 @@ from algorithms.astar import *
 
 
 # Size of Screen
-WIDTH, HEIGHT = 650, 650
+WIDTH, HEIGHT = 704, 804
 
 # Time of Execute Screen
 mainTime = py.time.Clock()
@@ -20,10 +20,11 @@ py.init()
 # Initialize Variables
 logo = Logos()
 areas = Areas()
+color = Colors()
 star = AStar()
+mapPrincipal = GameMap()
 background = Backgrounds(WIDTH, HEIGHT)
-mapPrincipal = GameMap(areas.areaMap.get_width(), areas.areaMap.get_height())
-delivery = Delivery(0, 0, 25, 25, 4, SpriteSheet())
+delivery = Delivery(0*32, 0*32, 32, 32, 4, SpriteSheet())
 
 # Create the Screen and Customize tittle
 screen = py.display.set_mode((WIDTH, HEIGHT))
@@ -47,31 +48,28 @@ def startGame():
                 sys.exit()
             elif e.type == py.MOUSEBUTTONDOWN and move is None:
                 mx, my = py.mouse.get_pos()
-                mx, my = int(mx/25)*25, int(my/25)*25
+                mx, my = int(mx/32)*32, int(my/32)*32
 
-                mouseRect = py.Rect(mx, my, 25, 25)
+                mouseRect = py.Rect(mx, my, 32, 32)
                 mapRects = mapPrincipal.getRects()
                 collide = mouseRect.collidelist(mapRects)
 
                 psx, psy = mapPrincipal.getPosition(collide)
-                print(psx, psy)
-                grid, _ = mapPrincipal.map[psy][psx]
-                print(grid)
+                grid, _ = mapPrincipal.map[psx][psy]
 
                 if grid == 1:
-                    _, pr = mapPrincipal.map[psy][psx]
-                    mapPrincipal.map[psy][psx] = (11, pr)
+                    _, pr = mapPrincipal.map[psx][psy]
+                    mapPrincipal.map[psx][psy] = (11, pr)
                     if current is not None:
                         pa, pb = current
                         _, pd = mapPrincipal.map[pa][pb]
                         mapPrincipal.map[pa][pb] = (1, pd)
-                    current = (psy, psx)
+                    current = (psx, psy)
 
                     mapping = mapPrincipal.getMatrix()
-                    startDelivery = (delivery.psx // 25, delivery.psy // 25)
-                    pp, examined = star.solveAStar(mapping, startDelivery, (psx, psy), Node.Manhattan)
+                    startDelivery = (delivery.psy // 32, delivery.psx // 32)
+                    pp, examined = star.solveAStar(mapping, startDelivery, (psy, psx), Node.Manhattan)
                     numberPath = len(pp)
-                    print(examined)
                     for i in range(numberPath - 1):
                         psy1, psx1 = pp[i]
                         psy2, psx2 = pp[i + 1]
@@ -85,7 +83,14 @@ def startGame():
                         elif dify < 0:
                             path.append(Direction.UP)
 
-        areas.areaMap.fill((48, 51, 49))
+                    for step in examined:
+                        i, j = step
+                        mapping[i][j] = 11
+                    for step in pp:
+                        i, j = step
+                        mapping[i][j] = 10
+
+        areas.areaMap.fill(color.dark)
         mapPrincipal.drawMap(areas.areaMap)
         delivery.blit_on(areas.areaMap)
         if pc == 9:

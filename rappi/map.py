@@ -1,22 +1,19 @@
 import csv
-import numpy as np
 import random as rd
 from os import path
-
 from rappi.resources import *
 
 
 # Map of Game
 class GameMap(Buildings, Colors):
-    def __init__(self, w, h):
+    def __init__(self):
         Colors.__init__(self)
-        self.dimensions = 25
-        self.width = w // self.dimensions
-        self.height = h // self.dimensions
+        self.dimensions = 32
+        self.dashboard = 704 // self.dimensions
         Buildings.__init__(self, self.dimensions, self.dimensions)
         with open(path.join('assets', 'maps', f'map.csv'), 'r') as csvFile:
             reader = csv.reader(csvFile)
-            self.map = [[0 for c in range(self.height)] for r in range(self.width)]
+            self.map = [[0 for c in range(self.dashboard)] for r in range(self.dashboard)]
             for i, row in enumerate(reader):
                 for j, gridValue in enumerate(row):
                     psx = i * self.dimensions
@@ -25,14 +22,14 @@ class GameMap(Buildings, Colors):
         csvFile.close()
 
     def posBuilding(self):
-        demo = [[0 for c in range(self.height)] for r in range(self.width)]
-        for c in range(self.width):
-            for r in range(self.height):
+        demo = [[0 for c in range(self.dashboard)] for r in range(self.dashboard)]
+        for c in range(self.dashboard):
+            for r in range(self.dashboard):
                 demo[c][r] = self.map[c][r]
 
         # Choose Building Position
-        for c in range(self.width):
-            for r in range(self.height):
+        for c in range(self.dashboard):
+            for r in range(self.dashboard):
                 choose = rd.randint(2, 8)
                 value, rect = demo[c][r]
                 if value == 2:
@@ -41,8 +38,8 @@ class GameMap(Buildings, Colors):
         # Put Traffic-Lights in Map
         count = 0
         while count < 25:
-            rx = rd.randint(0, self.width - 1)
-            ry = rd.randint(0, self.height - 1)
+            rx = rd.randint(0, self.dashboard - 1)
+            ry = rd.randint(0, self.dashboard - 1)
             value, rect = demo[rx][ry]
             if value == 1:
                 access = rd.randint(0, 1)
@@ -61,33 +58,31 @@ class GameMap(Buildings, Colors):
             # self.map[rx][ry] = (-1, rect)
 
     def getRects(self):
-        rects = [[0 for c in range(self.height)] for r in range(self.width)]
-        for c in range(self.width):
-            for r in range(self.height):
-                _, rects[c][r] = self.map[c][r]
-
-        news = []
-        for c in range(self.width):
-            for r in range(self.height):
-                news.append(rects[c][r])
-        return news
+        total = self.dashboard ** 2
+        nColumns = self.dashboard
+        rects = [None] * total
+        for index in range(total):
+            psx = index % nColumns
+            psy = index // nColumns
+            _, rects[index] = self.map[psx][psy]
+        return rects
 
     def getPosition(self, collide):
-        nRows, nColumns = self.width, self.height
+        nColumns = self.dashboard
         psx = collide % nColumns
         psy = collide // nColumns
         return psx, psy
 
     def getMatrix(self):
-        matrix = [[0 for c in range(self.height)] for r in range(self.width)]
-        for c in range(self.width):
-            for r in range(self.height):
-                matrix[c][r], _ = self.map[c][r]
+        matrix = [[0 for c in range(self.dashboard)] for r in range(self.dashboard)]
+        for c in range(self.dashboard):
+            for r in range(self.dashboard):
+                matrix[c][r], _ = self.map[r][c]
         return matrix
 
     def drawMap(self, surface):
-        for c in range(self.width):
-            for r in range(self.height):
+        for c in range(self.dashboard):
+            for r in range(self.dashboard):
                 value, rect = self.map[c][r]
                 if value == 1:
                     py.draw.rect(surface, self.dark, rect)

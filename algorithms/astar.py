@@ -57,8 +57,8 @@ class AStar:
                 if coordX > n - 1 or coordX < 0 \
                         or coordY > (n - 1) or coordY < 0:
                     continue
-                if mapPrincipal[coordY][coordX] != 1 and mapPrincipal[coordY][coordX] != 9 \
-                        and mapPrincipal[coordY][coordX] != 11:
+                if mapPrincipal[coordX][coordY] != 1 and mapPrincipal[coordX][coordY] != 9 \
+                        and mapPrincipal[coordX][coordY] != 11:
                     continue
 
                 evaluated.append((coordX, coordY))

@@ -4,11 +4,9 @@ import pygame as py
 # Colors of Game
 class Colors:
     def __init__(self):
-        self.dark = 48, 51, 49
-        self.grass = 151, 218, 123
+        self.dark = 40, 40, 40
         self.cposition = 0, 0, 255
         self.skyblue = 7, 218, 230
-        self.blood = 174, 0, 2
         self.delivery = 69, 242, 39
         self.transparent = 0, 0, 0, 50
 
@@ -31,7 +29,7 @@ class Areas(Colors):
     def __init__(self):
         Colors.__init__(self)
 
-        self.areaMap = py.Surface((1300, 550), py.SRCALPHA)
+        self.areaMap = py.Surface((704, 704), py.SRCALPHA)
         self.areaMap.fill(self.dark)
 
 
